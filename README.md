@@ -1,6 +1,7 @@
 # restart_service
 *** Attempt to run a task asynchronously ***
 By default, Ansible runs in parallel against all the hosts in the pattern you set in the hosts: field of each play. If you want to manage only a few machines at a time, for example during a rolling update, you can define how many hosts Ansible should manage at a single time using the serial keyword.
+
 In the above example, if we had 6 hosts in the group ‘webservers’, Ansible would execute the play completely (both tasks) on 3 of the hosts before moving on to the next 3 hosts.
 ```
 PLAY [webservers] ****************************************

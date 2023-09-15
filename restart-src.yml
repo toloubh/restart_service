@@ -4,7 +4,7 @@
   become: yes
   vars:
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-  serial: 2 #You can set the number of hosts that are executed in a single batch using the serial keyword in the play definition.
+  serial: 3 #You can set the number of hosts that are executed in a single batch using the serial keyword in the play definition.
   tasks:
     - name: Copy all conf files of nginx servers under /etc/nginx
       copy:
