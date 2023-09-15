@@ -1,0 +1,42 @@
+---
+- name: Copy NGINX conf files
+  hosts: all
+  become: yes
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+  serial: 2 #You can set the number of hosts that are executed in a single batch using the serial keyword in the play definition.
+  tasks:
+    - name: Copy all conf files of nginx servers under /etc/nginx
+      copy:
+        src: "{{ item }}"
+        dest: /etc/nginx/
+        owner: root
+        group: root
+        mode: "0644"
+      loop:
+         - "etc/nginx/conf.d"
+         - "etc/nginx/include.d"
+         - "etc/nginx/upstreams"
+         - "etc/nginx/nginx.conf"
+
+    - name: Verify Nginx config has no error
+      command: nginx -t
+      register: nginx_test_result
+      changed_when: false
+
+      notify:
+              - Restart Nginx
+              - Pause for 5 second
+
+  handlers:
+    - name: Pause for 5 seconds
+      pause:
+        seconds: 5
+
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+        daemon_reload: yes
+        enabled: yes
+      when: nginx_test_result.rc == 0
