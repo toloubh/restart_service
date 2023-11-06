@@ -22,16 +22,15 @@ jobs:
       run: |
         ansible-playbook -i localhost, -c local restart-src.yml
       env:
-        ANSIBLE_STDOUT_CALLBACK: 'default'
+        ANSIBLE_STDOUT_CALLBACK: 'json'
 
-    - name: Display Nginx test result
+    - name: Check Nginx configuration
       run: |
-        if [ ${{ steps.copy_nginx_conf_and_test.outputs.nginx_test_result }} -eq 0 ]; then
+        RC=$(nginx -t)
+        if [ $RC -eq 0 ]; then
           echo "Nginx config test passed."
         else
           echo "Nginx config test failed. Please check your configuration."
           exit 1
         fi
-      env:
-        ANSIBLE_STDOUT_CALLBACK: 'json'
       continue-on-error: true
