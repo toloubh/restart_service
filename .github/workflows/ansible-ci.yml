@@ -20,7 +20,7 @@ jobs:
 
     - name: Copy NGINX conf files and test
       run: |
-        ansible-playbook -i localhost, -c local playbook.yml
+        ansible-playbook -i localhost, -c local restart-src.yml
       env:
         ANSIBLE_STDOUT_CALLBACK: 'default'
 
