@@ -35,6 +35,3 @@ jobs:
       env:
         ANSIBLE_STDOUT_CALLBACK: 'json'
       continue-on-error: true
-
-outputs:
-  nginx_test_result: ${{ steps.copy_nginx_conf_and_test.outputs.nginx_test_result }}
