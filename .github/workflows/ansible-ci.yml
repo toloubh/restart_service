@@ -1,0 +1,40 @@
+name: Ansible CI
+
+on: [push]
+
+jobs:
+  ansible_ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Ansible
+      run: pip install ansible
+
+    - name: Copy NGINX conf files and test
+      run: |
+        ansible-playbook -i localhost, -c local playbook.yml
+      env:
+        ANSIBLE_STDOUT_CALLBACK: 'default'
+
+    - name: Display Nginx test result
+      run: |
+        if [ ${{ steps.copy_nginx_conf_and_test.outputs.nginx_test_result }} -eq 0 ]; then
+          echo "Nginx config test passed."
+        else
+          echo "Nginx config test failed. Please check your configuration."
+          exit 1
+        fi
+      env:
+        ANSIBLE_STDOUT_CALLBACK: 'json'
+      continue-on-error: true
+
+outputs:
+  nginx_test_result: ${{ steps.copy_nginx_conf_and_test.outputs.nginx_test_result }}
